@@ -5,7 +5,14 @@ import { Capsule } from '@react-three/drei'
 import { RigidBody, CapsuleCollider } from '@react-three/rapier'
 import type { RapierRigidBody } from '@react-three/rapier'
 
-const SPEED = 5
+import { 
+	PLAYER_SPEED, 
+	PLAYER_INITIAL_POSITION,
+	PLAYER_CAPSULE_SIZE, 
+	PLAYER_COLLIDER_SIZE,
+	CAMERA_OFFSET,
+	CAMERA_LERP_SPEED
+} from '../config/gameConfig'
 
 type KeysPressed = {
 	[key: string]: boolean
@@ -36,10 +43,10 @@ export const Player = () => {
 
 		const velocity = { x: 0, z: 0 }
 
-		if (keysPressed.current.w) velocity.z -= SPEED
-		if (keysPressed.current.s) velocity.z += SPEED
-		if (keysPressed.current.a) velocity.x -= SPEED
-		if (keysPressed.current.d) velocity.x += SPEED
+		if (keysPressed.current.w) velocity.z -= PLAYER_SPEED
+		if (keysPressed.current.s) velocity.z += PLAYER_SPEED
+		if (keysPressed.current.a) velocity.x -= PLAYER_SPEED
+		if (keysPressed.current.d) velocity.x += PLAYER_SPEED
 
 		playerRef.current.setLinvel(
 			{ x: velocity.x, y: playerRef.current.linvel().y, z: velocity.z },
@@ -50,11 +57,11 @@ export const Player = () => {
 
 		camera.position.lerp(
 			{
-				x: playerPosition.x,
-				y: playerPosition.y + 4,
-				z: playerPosition.z + 8,
+				x: playerPosition.x + CAMERA_OFFSET.x,
+				y: playerPosition.y + CAMERA_OFFSET.y,
+				z: playerPosition.z + CAMERA_OFFSET.z,
 			},
-			0.1
+			CAMERA_LERP_SPEED
 		)
 		camera.lookAt(playerPosition.x, playerPosition.y, playerPosition.z)
 	})
@@ -62,12 +69,12 @@ export const Player = () => {
 	return (
 		<RigidBody
 			ref={playerRef}
-			position={[0, 0.7, 0]}
+			position={PLAYER_INITIAL_POSITION}
 			colliders={false}
 			lockRotations={true}
 		>
-			<CapsuleCollider args={[0.25, 0.5]} />
-			<Capsule args={[0.35, 0.7]}>
+			<CapsuleCollider args={PLAYER_COLLIDER_SIZE} />
+			<Capsule args={PLAYER_CAPSULE_SIZE}>
 				<meshStandardMaterial color="blue" />
 			</Capsule>
 		</RigidBody>

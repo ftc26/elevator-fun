@@ -2,18 +2,21 @@ import { useRef, useState } from 'react'
 import { useFrame } from '@react-three/fiber'
 import { RigidBody } from '@react-three/rapier'
 import type { RapierRigidBody } from '@react-three/rapier'
+import { ELEVATOR_SPEED, ELEVATOR_PLATFORM_SIZE, FLOOR_HEIGHT } from '../config/gameConfig'
 
 type ElevatorProps = {
 	position: [number, number, number]
+	floorHeight?: number // Height between floors
 }
 
-const maxHeight = 3
-const minHeight = 0
-const speed = 0.02
-
-export const Elevator = ({ position }: ElevatorProps) => {
+export const Elevator = ({ position, floorHeight = FLOOR_HEIGHT }: ElevatorProps) => {
 	const elevatorRef = useRef<RapierRigidBody>(null)
 	const [playerInside, setPlayerInside] = useState(false)
+
+	// Calculate min and max heights based on elevator's starting position
+	const startingFloorY = position[1]
+	const minHeight = startingFloorY
+	const maxHeight = startingFloorY + floorHeight
 
 	const handleCollisionEnter = () => {
 		setPlayerInside(true)
@@ -32,7 +35,7 @@ export const Elevator = ({ position }: ElevatorProps) => {
 			elevatorRef.current.setTranslation(
 				{
 					x: currentPosition.x,
-					y: currentPosition.y + speed,
+					y: currentPosition.y + ELEVATOR_SPEED,
 					z: currentPosition.z,
 				},
 				true
@@ -41,7 +44,7 @@ export const Elevator = ({ position }: ElevatorProps) => {
 			elevatorRef.current.setTranslation(
 				{
 					x: currentPosition.x,
-					y: currentPosition.y - speed,
+					y: currentPosition.y - ELEVATOR_SPEED,
 					z: currentPosition.z,
 				},
 				true
@@ -59,7 +62,7 @@ export const Elevator = ({ position }: ElevatorProps) => {
 				onCollisionExit={handleCollisionExit}
 			>
 				<mesh position={[0, -0.1, 0]} castShadow receiveShadow>
-					<boxGeometry args={[1.8, 0.2, 1.8]} />
+					<boxGeometry args={ELEVATOR_PLATFORM_SIZE} />
 					<meshStandardMaterial color="#555" />
 				</mesh>
 			</RigidBody>
