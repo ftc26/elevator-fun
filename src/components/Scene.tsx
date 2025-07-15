@@ -94,17 +94,16 @@ export const Scene = () => {
 		<>
 			{/* Ambient lighting for overall scene illumination */}
 			<ambientLight intensity={AMBIENT_LIGHT_INTENSITY} />
-
-			{/* Directional light for shadows and depth */}
+			/* Directional light for shadows and depth */
 			<directionalLight
 				position={DIRECTIONAL_LIGHT_POSITION}
 				intensity={DIRECTIONAL_LIGHT_INTENSITY}
 				castShadow
+				shadow-mapSize={[512, 512]}
+				shadow-radius={40}
 			/>
-
 			{/* Camera controls for user interaction */}
 			<OrbitControls />
-
 			{/* Physics world with gravity and debug visualization */}
 			<Physics debug gravity={GRAVITY}>
 				{/* Render all floors with their respective holes */}

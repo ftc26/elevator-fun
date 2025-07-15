@@ -9,7 +9,7 @@ This project is a 3D browser-based game where players navigate through multiple 
 ### Key Features
 
 - **3D Physics Simulation**: Real-time physics using Rapier physics engine
-- **Multi-floor Navigation**: Dynamic elevator system connecting multiple floors  
+- **Multi-floor Navigation**: Dynamic elevator system connecting multiple floors
 - **Interactive Gameplay**: WASD movement controls with collision detection
 - **Procedural Level Design**: Randomized hole placement for replayability
 - **Modern Tech Stack**: Built with React, TypeScript, and Three.js
@@ -17,16 +17,19 @@ This project is a 3D browser-based game where players navigate through multiple 
 ## 🎯 Game Mechanics
 
 ### Player Controls
+
 - **WASD Keys**: Move the player character around the 3D environment
 - **Physics**: Player falls through holes and can ride elevators between floors
 
 ### Level Design
+
 - **4 Floors**: Multi-level vertical gameplay with increasing complexity
 - **Elevator System**: Moving platforms that transport players between floors
 - **Dynamic Holes**: Procedurally placed fall-through holes create navigation challenges
 - **Grid-based Layout**: 3x3 tile system for precise movement and positioning
 
 ### Elevator Mechanics
+
 - Elevators automatically move between floors at a consistent speed
 - Each floor (except the top) has one elevator going upward
 - Elevator positions are predefined but cycle through different locations
@@ -35,6 +38,7 @@ This project is a 3D browser-based game where players navigate through multiple 
 ## 🛠 Technical Architecture
 
 ### Technology Stack
+
 - **Frontend Framework**: React 19.1.0 with TypeScript
 - **3D Rendering**: Three.js with React Three Fiber
 - **Physics Engine**: React Three Rapier for realistic physics simulation
@@ -42,6 +46,7 @@ This project is a 3D browser-based game where players navigate through multiple 
 - **Code Quality**: ESLint and Prettier for consistent code style
 
 ### Project Structure
+
 ```
 src/
 ├── components/           # React Three.js components
@@ -58,22 +63,26 @@ src/
 ### Key Components
 
 #### Scene.tsx
+
 - Orchestrates the entire 3D world
 - Generates floor configurations with elevators and holes
 - Manages lighting and camera controls
 - Implements physics world with gravity
 
-#### Player.tsx  
+#### Player.tsx
+
 - Handles player character physics and movement
 - Implements WASD keyboard controls
 - Manages collision detection and falling mechanics
 
 #### Elevator.tsx
+
 - Creates moving platform elevators
 - Implements smooth vertical movement between floors
 - Handles player collision and transportation
 
 #### Floor.tsx
+
 - Generates floor tiles in a grid pattern
 - Creates holes for elevators and fall-through mechanics
 - Optimizes rendering with grouped geometry
@@ -81,26 +90,30 @@ src/
 ## 🚀 Getting Started
 
 ### Prerequisites
+
 - Node.js (version 16 or higher)
 - npm or yarn package manager
 
 ### Installation
 
 1. **Clone the repository**
-   ```bash
-   git clone <repository-url>
-   cd fun-with-elevator
-   ```
+
+    ```bash
+    git clone <repository-url>
+    cd fun-with-elevator
+    ```
 
 2. **Install dependencies**
-   ```bash
-   npm install
-   ```
+
+    ```bash
+    npm install
+    ```
 
 3. **Start development server**
-   ```bash
-   npm run dev
-   ```
+
+    ```bash
+    npm run dev
+    ```
 
 4. **Open in browser**
    Navigate to `http://localhost:5173` to play the game
@@ -118,17 +131,20 @@ src/
 The game is highly configurable through `src/config/gameConfig.ts`:
 
 ### Floor Settings
+
 - `FLOOR_COUNT`: Number of floors (default: 4)
 - `FLOOR_HEIGHT`: Vertical spacing between floors
 - `TILE_COUNT`: Grid size for each floor (3x3)
 
 ### Gameplay Tuning
+
 - `PLAYER_SPEED`: Movement speed
 - `ELEVATOR_SPEED`: Elevator movement rate
 - `MAX_FALL_HOLES_PER_FLOOR`: Random hole generation limit
 - `GRAVITY`: Physics world gravity strength
 
 ### Visual Settings
+
 - Lighting configuration (ambient and directional)
 - Camera positioning and field of view
 - Material colors and properties
@@ -136,12 +152,14 @@ The game is highly configurable through `src/config/gameConfig.ts`:
 ## 🏗 Development Highlights
 
 ### Code Quality Features
+
 - **TypeScript**: Full type safety throughout the codebase
 - **ESLint Configuration**: Strict linting rules for code consistency
 - **Modular Architecture**: Clean separation of concerns
 - **Comprehensive Comments**: Well-documented code for maintainability
 
 ### Advanced Three.js Concepts
+
 - **Physics Integration**: Seamless integration between visual and physics worlds
 - **Dynamic Geometry**: Procedural generation of game elements
 - **Camera Controls**: Smooth orbit controls for optimal viewing
@@ -159,7 +177,6 @@ This project showcases proficiency in:
 6. **Performance**: Optimization techniques for 3D applications
 7. **Documentation**: Comprehensive code comments and README
 
-
 ---
 
-*This project demonstrates advanced web development skills using modern technologies for creating engaging 3D interactive experiences.*
+_This project demonstrates advanced web development skills using modern technologies for creating engaging 3D interactive experiences._

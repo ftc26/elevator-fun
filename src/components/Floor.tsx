@@ -46,6 +46,7 @@ export const Floor = ({ position, holes }: FloorProps) => (
 									(TILE_COUNT * TILE_SIZE) / 2 +
 									TILE_SIZE / 2,
 							]}
+							castShadow
 							receiveShadow
 						>
 							<boxGeometry

@@ -99,8 +99,12 @@ export const Player = () => {
 			<CapsuleCollider args={PLAYER_COLLIDER_SIZE} />
 
 			{/* Visual representation of the player */}
-			<Capsule args={PLAYER_CAPSULE_SIZE}>
-				<meshStandardMaterial color="blue" />
+			<Capsule args={PLAYER_CAPSULE_SIZE} castShadow receiveShadow>
+				<meshPhysicalMaterial
+					color="cyan"
+					metalness={0.2}
+					roughness={0.3}
+				/>
 			</Capsule>
 		</RigidBody>
 	)

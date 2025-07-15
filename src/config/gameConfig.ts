@@ -70,13 +70,13 @@ export const GRAVITY: [number, number, number] = [0, -9.81, 0]
 // LIGHTING CONFIGURATION
 // =============================================================================
 /** Intensity of ambient light (general scene illumination) */
-export const AMBIENT_LIGHT_INTENSITY = 0.6
+export const AMBIENT_LIGHT_INTENSITY = 0.4
 
 /** Position of directional light [x, y, z] */
-export const DIRECTIONAL_LIGHT_POSITION: [number, number, number] = [5, 10, 7.5]
+export const DIRECTIONAL_LIGHT_POSITION: [number, number, number] = [12, 14, 12]
 
 /** Intensity of directional light (shadows and highlights) */
-export const DIRECTIONAL_LIGHT_INTENSITY = 1
+export const DIRECTIONAL_LIGHT_INTENSITY = 1.5
 
 // =============================================================================
 // UTILITY FUNCTIONS
