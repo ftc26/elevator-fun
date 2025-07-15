@@ -4,101 +4,130 @@ import { Physics } from '@react-three/rapier'
 import { Player } from './Player'
 import { Elevator } from './Elevator'
 import { Floor } from './Floor'
-import { FLOOR_COUNT, FLOOR_HEIGHT, ELEVATOR_POSITIONS, GRAVITY, AMBIENT_LIGHT_INTENSITY, DIRECTIONAL_LIGHT_POSITION, DIRECTIONAL_LIGHT_INTENSITY, TILE_COUNT, getTilePosition, MAX_FALL_HOLES_PER_FLOOR } from '../config/gameConfig'
+import {
+	FLOOR_COUNT,
+	FLOOR_HEIGHT,
+	ELEVATOR_POSITIONS,
+	GRAVITY,
+	AMBIENT_LIGHT_INTENSITY,
+	DIRECTIONAL_LIGHT_POSITION,
+	DIRECTIONAL_LIGHT_INTENSITY,
+	TILE_COUNT,
+	getTilePosition,
+	MAX_FALL_HOLES_PER_FLOOR,
+} from '../config/gameConfig'
 
+/**
+ * Main scene component that generates the 3D world with floors, elevators, and physics
+ */
 export const Scene = () => {
-	// Generate floors, elevators, and holes
-	const floors = Array.from({ length: FLOOR_COUNT }, (_, i) => {
-		const floorY = i * FLOOR_HEIGHT
-		const hasElevator = i < FLOOR_COUNT - 1 // No elevator on top floor
-		
-		// Cycle through positions if more floors than predefined positions
-		const elevatorTileIndex = ELEVATOR_POSITIONS[i % ELEVATOR_POSITIONS.length]
-		
-		// Determine holes for this floor
+	// Generate floor configuration with elevators and holes
+	const floors = Array.from({ length: FLOOR_COUNT }, (_, floorIndex) => {
+		const floorY = floorIndex * FLOOR_HEIGHT
+		const hasElevator = floorIndex < FLOOR_COUNT - 1 // No elevator on top floor
+
+		// Cycle through predefined elevator positions if more floors than positions
+		const elevatorTileIndex =
+			ELEVATOR_POSITIONS[floorIndex % ELEVATOR_POSITIONS.length]
+
+		// Calculate holes for this floor
 		const holes: number[] = []
-		
-		// 1. If this floor has an elevator going up, add hole at elevator position
+
+		// 1. Add hole where elevator goes up (if this floor has an elevator)
 		if (hasElevator) {
 			holes.push(elevatorTileIndex)
 		}
-		
-		// 2. If there's an elevator coming from the floor below, add hole where it arrives
-		if (i > 0) {
-			const floorBelowElevatorTileIndex = ELEVATOR_POSITIONS[(i - 1) % ELEVATOR_POSITIONS.length]
-			if (!holes.includes(floorBelowElevatorTileIndex)) {
-				holes.push(floorBelowElevatorTileIndex)
+
+		// 2. Add hole where elevator arrives from below (if not ground floor)
+		if (floorIndex > 0) {
+			const elevatorFromBelowIndex =
+				ELEVATOR_POSITIONS[(floorIndex - 1) % ELEVATOR_POSITIONS.length]
+			// Avoid duplicate holes at the same position
+			if (!holes.includes(elevatorFromBelowIndex)) {
+				holes.push(elevatorFromBelowIndex)
 			}
 		}
-		
-		// 3. Add randomized fall-down holes at different positions (not where elevators are)
-		if (i > 0) { // No fall-down holes on ground floor
-			// Find all positions that are not used by elevators
-			const usedPositions = new Set(holes)
-			const availablePositions = []
-			
-			for (let tileIndex = 0; tileIndex < TILE_COUNT * TILE_COUNT; tileIndex++) {
-				if (!usedPositions.has(tileIndex)) {
-					availablePositions.push(tileIndex)
-				}
+
+		// 3. Add randomized fall-through holes (except on ground floor)
+		if (floorIndex > 0) {
+			// Find all tile positions not occupied by elevators
+			const occupiedPositions = new Set(holes)
+			const availablePositions = Array.from(
+				{ length: TILE_COUNT * TILE_COUNT },
+				(_, tileIndex) => tileIndex
+			).filter((tileIndex) => !occupiedPositions.has(tileIndex))
+
+			// Shuffle available positions using Fisher-Yates algorithm
+			for (let i = availablePositions.length - 1; i > 0; i--) {
+				const j = Math.floor(Math.random() * (i + 1))
+				;[availablePositions[i], availablePositions[j]] = [
+					availablePositions[j],
+					availablePositions[i],
+				]
 			}
-			
-			// Shuffle available positions for randomness
-			const shuffledPositions = [...availablePositions]
-			for (let k = shuffledPositions.length - 1; k > 0; k--) {
-				const j = Math.floor(Math.random() * (k + 1))
-				;[shuffledPositions[k], shuffledPositions[j]] = [shuffledPositions[j], shuffledPositions[k]]
-			}
-			
-			// Add fall holes up to the maximum limit
-			for (let k = 0; k < Math.min(MAX_FALL_HOLES_PER_FLOOR, shuffledPositions.length); k++) {
-				holes.push(shuffledPositions[k])
-			}
+
+			// Add up to MAX_FALL_HOLES_PER_FLOOR random holes
+			const fallHoleCount = Math.min(
+				MAX_FALL_HOLES_PER_FLOOR,
+				availablePositions.length
+			)
+			holes.push(...availablePositions.slice(0, fallHoleCount))
 		}
-		
+
+		// Calculate elevator world position
 		const elevatorWorldPos = getTilePosition(elevatorTileIndex)
-		
+
 		return {
-			floorIndex: i,
+			floorIndex,
 			floorY,
 			holes,
-			elevatorPosition: [elevatorWorldPos.x, floorY, elevatorWorldPos.z] as [number, number, number],
-			hasElevator
+			elevatorPosition: [
+				elevatorWorldPos.x,
+				floorY,
+				elevatorWorldPos.z,
+			] as [number, number, number],
+			hasElevator,
 		}
 	})
 
 	return (
 		<>
+			{/* Ambient lighting for overall scene illumination */}
 			<ambientLight intensity={AMBIENT_LIGHT_INTENSITY} />
+
+			{/* Directional light for shadows and depth */}
 			<directionalLight
 				position={DIRECTIONAL_LIGHT_POSITION}
 				intensity={DIRECTIONAL_LIGHT_INTENSITY}
 				castShadow
 			/>
+
+			{/* Camera controls for user interaction */}
 			<OrbitControls />
 
+			{/* Physics world with gravity and debug visualization */}
 			<Physics debug gravity={GRAVITY}>
-				{/* Generate floors */}
+				{/* Render all floors with their respective holes */}
 				{floors.map((floor) => (
-					<Floor 
+					<Floor
 						key={`floor-${floor.floorIndex}`}
-						position={[0, floor.floorY, 0]} 
-						holes={floor.holes} 
+						position={[0, floor.floorY, 0]}
+						holes={floor.holes}
 					/>
 				))}
-				
-				{/* Generate elevators (all floors except the top one) */}
+
+				{/* Render elevators for all floors except the top one */}
 				{floors
-					.filter(floor => floor.hasElevator)
+					.filter((floor) => floor.hasElevator)
 					.map((floor) => (
-						<Elevator 
+						<Elevator
 							key={`elevator-${floor.floorIndex}`}
 							position={floor.elevatorPosition}
 							floorHeight={FLOOR_HEIGHT}
 						/>
-					))
-				}
-				
+					))}
+
+				{/* Player character */}
 				<Player />
 			</Physics>
 		</>
