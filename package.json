@@ -9,7 +9,8 @@
 		"lint": "eslint .",
 		"preview": "vite preview",
 		"format": "prettier --write .",
-		"format-check": "prettier --check ."
+		"format-check": "prettier --check .",
+		"deploy": "git add . && git commit -m \"Fast deploy 🚀\" && git push"
 	},
 	"dependencies": {
 		"@react-three/drei": "^10.5.0",

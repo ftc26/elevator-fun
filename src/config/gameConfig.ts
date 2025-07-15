@@ -31,13 +31,10 @@ export const MAX_FALL_HOLES_PER_FLOOR = 2
 // ELEVATOR CONFIGURATION
 // =============================================================================
 /** Speed at which elevators move between floors */
-export const ELEVATOR_SPEED = 0.03
+export const ELEVATOR_SPEED = 0.05
 
 /** Dimensions of elevator platform [width, height, depth] */
-export const ELEVATOR_PLATFORM_SIZE = [1.8, 0.2, 1.8] as const
-
-/** Dimensions of elevator collision detection area [width, height, depth] */
-export const ELEVATOR_SENSOR_SIZE = [2.2, 1.5, 2.2] as const
+export const ELEVATOR_PLATFORM_SIZE = [1.8, 0.3, 1.8] as const
 
 // =============================================================================
 // PLAYER CONFIGURATION
